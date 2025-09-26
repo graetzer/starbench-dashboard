@@ -1,0 +1,6 @@
+SELECT DISTINCT ?testIri ?test {
+        GRAPH <http://stardog.com/sbdashboard/metadata/> {
+            ?testIri a :Test .
+            ?testIri rdfs:label ?test .
+        }
+    }

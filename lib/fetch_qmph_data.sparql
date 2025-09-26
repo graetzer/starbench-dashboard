@@ -1,0 +1,29 @@
+prefix : <http://stardog.com/sbdashboard#>
+prefix br: <http://stardog.com/sbdashboard/branches/>
+prefix test: <http://stardog.com/sbdashboard/tests/>
+
+SELECT ?testIri ?branch ?clients ?cluster ?actual ?date ?data
+FROM stardog:context:local
+{     
+  {
+    SELECT ?testIri ?branch ?cluster ?data ?date {
+      BIND(test:bsbm100m_explore_barq AS ?testIri)
+      BIND(br:develop AS ?branch)
+      BIND(false AS ?cluster) 
+      ?group a :RunGroup ;
+             :forBranch ?branch ;
+             :buildNum ?build ;
+             :forStarbenchBranch br:SB_master ;
+             :hasRun ?run .
+      ?run :forTest ?testIri ;
+           :date ?date ;
+           :cluster ?cluster;
+           :data ?data .
+    }
+    order by desc(?date) ?data
+    LIMIT 100
+  }
+  
+  ?data :clients ?clients ;
+        :actualValue ?actual
+}
