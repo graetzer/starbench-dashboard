@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import re
 
 # Valid QMPH line formats include one or more float values followed by a date_commit string and an "Expected:" section.
 # Examples:
@@ -35,16 +36,19 @@ def parse_qmph_line(line):
     return results
 
 
-def load_qmph_frames(folder="qmph", file_predicate=lambda f: f.endswith("_load.txt"), limit_days=None):
+def load_qmph_frames(folder="qmph", name_regex="*._load", limit_days=None):
     """
     Load all time series data frames from the specified folder using a file_predicate function.
     Returns a dictionary of DataFrames indexed by benchmark name.
     Optionally filters to the last N days if limit_days is set.
     """
-    to_load = [f[:-4] for f in os.listdir(folder) if file_predicate(f)]
     data_frames = dict()
-    for fname in to_load:
-        path = os.path.join(folder, f"{fname}.txt")
+    for fname in os.listdir(folder):
+        path = os.path.join(folder, fname)
+        test_name = fname[:-4]
+        if not re.fullmatch(name_regex, test_name):
+            continue
+
         with open(path, "r") as f:
             all_data = []
             for line in f:
@@ -61,10 +65,10 @@ def load_qmph_frames(folder="qmph", file_predicate=lambda f: f.endswith("_load.t
             df = df.set_index('date_commit')
             if limit_days is not None and len(df) > limit_days:
                 df = df.iloc[-limit_days:]
-            data_frames[fname] = df
+            data_frames[test_name] = df
     return data_frames
 
 # Example usage:
-# dfs = oad_qmph_frames(folder="qmph", file_predicate=lambda f: f.endswith("_load.txt"), limit_days=limit_days)
+# dfs = load_qmph_frames(folder="qmph", name_regex=".*_load", limit_days=limit_days)
 # print(dfs.keys())
 # print(dfs['bsbm100m_load'].head())

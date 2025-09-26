@@ -12,13 +12,10 @@ with col1:
     limit_days = st.slider("Limit to last N days", min_value=1, max_value=360, value=180)
 with col2:
     # Textbox for user to input for a custom wildcard regex
-    file_predicate_input = st.text_input("File predicate (regex)", value=".*_load\.txt")
-
-def filter_files_function(filename):
-    return re.fullmatch(file_predicate_input, filename) is not None
+    name_regex_input = st.text_input("Test Matching Predicate (regex)", value=".*_load")
 
 # Load all time series dataframes with limit_days
-data_frames = ld.load_qmph_frames(folder="qmph", file_predicate=filter_files_function, limit_days=limit_days)
+data_frames = ld.load_qmph_frames(folder="qmph", name_regex=name_regex_input, limit_days=limit_days)
 
 
 # Show a streamlit diagram with all dataframes overlaid

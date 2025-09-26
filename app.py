@@ -28,9 +28,9 @@ if "login" not in st.session_state:
 
 else:
     # Define the pages
-    main_page = st.Page("page_main.py", title="Dashboard Main Page", icon="🎈")
-    page_correlation = st.Page("page_correlation.py", title="Test Correlation", icon="❄️")
-    page_changepoints = st.Page("page_changepoints.py", title="Change Points", icon="🎉")
+    main_page = st.Page("page_main.py", title="Main Dashboard", icon="📊")
+    page_correlation = st.Page("page_correlation.py", title="Test Correlation", icon="🔍")
+    page_changepoints = st.Page("page_changepoints.py", title="Change Points", icon="📉")
 
     # Set up navigation
     pg = st.navigation([main_page, page_correlation, page_changepoints])
