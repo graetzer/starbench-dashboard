@@ -29,6 +29,10 @@ if "login" not in st.session_state:
         with col2:
             use_local_data = st.form_submit_button("Demo Login")
 
+        if username is None or username.strip() == "" or password is None or password.strip() == "":
+            st.warning("Please enter both username and password to login.")
+            st.stop()
+
         if login:
             st.session_state.login = {
                 "endpoint": endpoint,
