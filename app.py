@@ -40,9 +40,8 @@ if "login" not in st.session_state:
         col1, col2, col3 = st.columns([1, 1, 2])
         with col1:
             st.form_submit_button("Login", type="primary", on_click=process_login)
-        with col2:
-            if st.runtime.exists() and st.runtime.scriptrunner.is_dev_mode:
-                st.form_submit_button("Demo Login", type="secondary", on_click=process_demo_login)
+#        with col2:
+#            st.form_submit_button("Demo Login", type="secondary", on_click=process_demo_login)
 
 else:
     # Define the pages
