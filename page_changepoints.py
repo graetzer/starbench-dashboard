@@ -14,18 +14,14 @@ with col1:
     limit_days = st.slider("Limit to last N days", min_value=1, max_value=360, value=360)
 with col2:
     # Textbox for user to input for a custom wildcard regex
-    name_regex_input = st.text_input("File predicate (regex)", value=".*_load")
+    name_regex_input = st.text_input("File predicate (regex)", value="bsbm1b.*")
 
-# Load all time series dataframes with limit_days
-data_frames = ld.load_qmph_frames(folder="qmph", name_regex=name_regex_input, limit_days=limit_days)
-
-if len(data_frames) < 2:
-    st.write("Not enough data frames to compute correlations. Please ensure at least two `_load.txt` files are present in the `qmph` folder.")
-    st.stop()
-    exit()
+# Checks session data for login property
+# and loads data either from Stardog or local qmph/ folder
+data_frames = ld.load_data_frames(name_regex=name_regex_input, limit_days=limit_days)
 
 # Prepare a dictionary of DataFrames indexed by benchmark name
-series_dict = {name: df['value'] for name, df in data_frames.items()}
+series_dict = {name: df['qmph'] for name, df in data_frames.items()}
 
 # Align all series on their date_commit index
 all_series = [s for s in series_dict.values()]

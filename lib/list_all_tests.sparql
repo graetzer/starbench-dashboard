@@ -1,6 +1,13 @@
-SELECT DISTINCT ?testIri ?test {
-        GRAPH <http://stardog.com/sbdashboard/metadata/> {
-            ?testIri a :Test .
-            ?testIri rdfs:label ?test .
-        }
-    }
+# list of actual tests with performance values linked to them through runs
+SELECT DISTINCT ?testIri ?test
+FROM NAMED stardog:context:local
+{
+  GRAPH <http://stardog.com/sbdashboard/metadata/> {
+    ?testIri a :Test .     
+    ?testIri rdfs:label ?test .     
+  }
+  FILTER EXISTS { graph ?group {
+    ?group a :RunGroup ;
+             :hasRun/:forTest ?testIri
+  } }
+}

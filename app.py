@@ -8,23 +8,38 @@ def vote(item):
         st.session_state.vote = {"item": item, "reason": reason}
         st.rerun()
 
+
 if "login" not in st.session_state:
-    st.write("Specify credentials to login")
+    # center company logo using columns
+    col1, col2, col3 = st.columns([1,2,1])
+    with col2:
+        st.image("https://www.stardog.com/img/stardog-logo-optimized.svg", width=200)
 
     with st.form("login_form"):
+        st.write("Specify credentials to login")
         endpoint = st.text_input("Stardog Endpoint", "https://doghouse.stardog.cloud:5820/")
-        username = st.text_input("Username", "admin")
-        password = st.text_input("Password", "admin", type="password")
+        st.text_input("Database", "sb-dashboard", disabled=True)
+        username = st.text_input("Username", placeholder="admin")
+        password = st.text_input("Password", placeholder="admin", type="password")
 
         # Every form must have a submit button.
-        submitted = st.form_submit_button("Submit")
-        if submitted:
+        col1, col2, col3 = st.columns([1, 1, 2])
+        with col1:
+            login = st.form_submit_button("Login")
+        with col2:
+            use_local_data = st.form_submit_button("Demo Login")
+
+        if login:
             st.session_state.login = {
                 "endpoint": endpoint,
                 "username": username,
                 "password": password
             }
-            st.rerun()        
+            st.rerun()
+        elif use_local_data:
+            st.session_state.login = "offline"
+            st.rerun()
+
 
 else:
     # Define the pages
