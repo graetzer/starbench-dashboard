@@ -1,28 +1,5 @@
 import streamlit as st
 
-@st.dialog("Cast your vote")
-def vote(item):
-    st.write(f"Why is {item} your favorite?")
-    reason = st.text_input("Because...")
-    if st.button("Submit"):
-        st.session_state.vote = {"item": item, "reason": reason}
-        st.rerun()
-
-
-def process_login():
-    if username is None or username.strip() == "" or password is None or password.strip() == "":
-        st.warning("Please enter both username and password to login.")
-        return
-
-    st.session_state.login = {
-        "endpoint": endpoint,
-        "username": username,
-        "password": password
-    }
-
-def process_demo_login():
-    st.session_state.login = "offline"
-
 if "login" not in st.session_state:
     # center company logo using columns
     col1, col2, col3 = st.columns([1,2,1])
@@ -39,9 +16,23 @@ if "login" not in st.session_state:
         # Every form must have a submit button.
         col1, col2, col3 = st.columns([1, 1, 2])
         with col1:
-            st.form_submit_button("Login", type="primary", on_click=process_login)
-#        with col2:
-#            st.form_submit_button("Demo Login", type="secondary", on_click=process_demo_login)
+            pressed_login = st.form_submit_button("Login", type="primary")
+        with col2:
+            demo_login = st.form_submit_button("Demo Login", type="secondary")
+
+        if pressed_login:
+            if username is None or username.strip() == "" or password is None or password.strip() == "":
+                st.warning("Please enter both username and password to login.")
+            else:
+                st.session_state.login = {
+                    "endpoint": endpoint,
+                    "username": username,
+                    "password": password
+                }
+                st.rerun()
+        elif demo_login:
+            st.session_state.login = "offline"
+            st.rerun()
 
 else:
     # Define the pages

@@ -157,6 +157,10 @@ def load_sb_dashboard_data(name_regex=".*_load", limit_days=None, credentials=No
 
 # Streamlit-cached function for loading data frames
 @st.cache_data(show_spinner=True)
+def cached_load_sb_dashboard_data(conn_creds, name_regex, limit_days):
+    # Use the supplied login credentials from session_state
+    return load_sb_dashboard_data(name_regex=name_regex, limit_days=limit_days, credentials=conn_creds)
+
 def load_data_frames(name_regex, limit_days):
     if 'login' not in st.session_state or not isinstance(st.session_state.login, dict):
         st.warning("Offline mode. Showing local `qmph/` data only.")
@@ -164,6 +168,6 @@ def load_data_frames(name_regex, limit_days):
         st.write(f"Loaded {len(data_frames)} data frames from `qmph/` folder with `_load.txt` suffix.")
     else:
         # Use the supplied login credentials from session_state
-        data_frames = load_sb_dashboard_data(name_regex=name_regex, limit_days=limit_days, credentials=st.session_state.login)
-        st.write(f"Loaded {len(data_frames)} data frames from sb-dashboard on {st.session_state.login['endpoint']}.")
+        data_frames = cached_load_sb_dashboard_data(conn_creds=st.session_state.login, name_regex=name_regex, limit_days=limit_days)
+        st.write(f"Loaded {len(data_frames)} data frames from {dashboard_db} on {st.session_state.login['endpoint']}.")
     return data_frames
