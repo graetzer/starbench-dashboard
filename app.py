@@ -25,22 +25,25 @@ if "login" not in st.session_state:
         # Every form must have a submit button.
         col1, col2, col3 = st.columns([1, 1, 2])
         with col1:
-            login = st.form_submit_button("Login")
+            press_login = st.form_submit_button("Login")
         with col2:
             use_local_data = st.form_submit_button("Demo Login")
 
-        if username is None or username.strip() == "" or password is None or password.strip() == "":
-            st.warning("Please enter both username and password to login.")
-            st.stop()
 
-        if login:
+        if press_login:
+
+            if username is None or username.strip() == "" or password is None or password.strip() == "":
+                st.warning("Please enter both username and password to login.")
+                st.stop()
+
             st.session_state.login = {
                 "endpoint": endpoint,
                 "username": username,
                 "password": password
             }
             st.rerun()
-        elif use_local_data:
+        
+        if use_local_data:
             st.session_state.login = "offline"
             st.rerun()
 
