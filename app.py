@@ -9,6 +9,20 @@ def vote(item):
         st.rerun()
 
 
+def process_login():
+    if username is None or username.strip() == "" or password is None or password.strip() == "":
+        st.warning("Please enter both username and password to login.")
+        return
+
+    st.session_state.login = {
+        "endpoint": endpoint,
+        "username": username,
+        "password": password
+    }
+
+def process_demo_login():
+    st.session_state.login = "offline"
+
 if "login" not in st.session_state:
     # center company logo using columns
     col1, col2, col3 = st.columns([1,2,1])
@@ -25,28 +39,10 @@ if "login" not in st.session_state:
         # Every form must have a submit button.
         col1, col2, col3 = st.columns([1, 1, 2])
         with col1:
-            press_login = st.form_submit_button("Login")
+            st.form_submit_button("Login", type="primary", on_click=process_login)
         with col2:
-            use_local_data = st.form_submit_button("Demo Login")
-
-
-        if press_login:
-
-            if username is None or username.strip() == "" or password is None or password.strip() == "":
-                st.warning("Please enter both username and password to login.")
-                st.stop()
-
-            st.session_state.login = {
-                "endpoint": endpoint,
-                "username": username,
-                "password": password
-            }
-            st.rerun()
-        
-        if use_local_data:
-            st.session_state.login = "offline"
-            st.rerun()
-
+            if st.runtime.exists() and st.runtime.scriptrunner.is_dev_mode:
+                st.form_submit_button("Demo Login", type="secondary", on_click=process_demo_login)
 
 else:
     # Define the pages
