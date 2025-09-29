@@ -48,6 +48,3 @@ selected_df = data_frames[selected_name]
 
 # Plot a specific time series
 st.line_chart(selected_df['qmph'])
-
-st.write("### Change-Point Analysis")
-
